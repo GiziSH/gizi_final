@@ -61,7 +61,7 @@ public class Fragment4 extends Fragment {
         });
 
         GetData task = new GetData();
-        task.execute("http://192.168.0.3/getjson.php");
+        task.execute("http://192.168.0.48/getjson.php");
         return v;
     }
 
