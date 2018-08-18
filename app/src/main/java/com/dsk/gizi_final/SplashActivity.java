@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.dsk.gizi_final.MainActivity;
+
 public class SplashActivity extends Activity {
     @Override
     protected void onCreate(Bundle savednstanceState) {
@@ -16,5 +18,6 @@ public class SplashActivity extends Activity {
         }
         startActivity(new Intent(this, MainActivity.class));
         finish();
+
     }
 }

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".Fragment4"
+    android:layout_margin="15dp"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="7"
+            android:text="게시물 목록"
+            android:textStyle="bold"
+            android:textSize="35dp"/>
+
+        <Button
+            android:id="@+id/write_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Write" />
+    </LinearLayout>
+    <ListView
+        android:id="@+id/listView_main_list"
+        android:layout_width="237dp"
+        android:layout_height="458dp"
+        android:layout_margin="5dp"
+        android:layout_weight="3"
+        android:padding="5dp" />
+
+
+
+</LinearLayout>
