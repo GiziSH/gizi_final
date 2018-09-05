@@ -8,11 +8,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,12 +31,12 @@ public class Fragment4 extends Fragment {
 
     private static final String TAG_JSON="webnautes";
     private static final String TAG_NUM = "num";
-    private static final String TAG_TITLE = "title";
     private static final String TAG_AUTHOR ="author";
-    private static final String TAG_DATE ="date";
+    private static final String TAG_TITLE = "title";
+    private static final String TAG_TIME ="time";
     private static final String TAG_CONTENT ="content";
 
-    private TextView mTextViewResult;
+    //private TextView mTextViewResult;
     ArrayList<HashMap<String, String>> mArrayList;
     ListView mlistView;
     String mJsonString;
@@ -44,7 +44,7 @@ public class Fragment4 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_fragment4, container, false);
-        mTextViewResult = (TextView)v.findViewById(R.id.textView_main_result);
+        //mTextViewResult = (TextView)v.findViewById(R.id.textView_main_result);
         mlistView = (ListView) v.findViewById(R.id.listView_main_list);
         mArrayList = new ArrayList<>();
 
@@ -56,14 +56,47 @@ public class Fragment4 extends Fragment {
                 android.support.v4.app.FragmentTransaction fragmenttransaction = getFragmentManager().beginTransaction();
                 fragmenttransaction.replace(R.id.fragment_container, writeFragment);
                 fragmenttransaction.commit();
-
             }
         });
 
+        GetData refresh = new GetData();
+        refresh.execute("http://192.168.0.146/num_refresh.php");
+
         GetData task = new GetData();
-        task.execute("http://192.168.0.48/getjson.php");
+        task.execute("http://192.168.0.146/getjson.php");
+
+        mlistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String title_result = new String(mArrayList.get(position).get(TAG_TITLE));
+                String author_result = new String(mArrayList.get(position).get(TAG_AUTHOR));
+                String content_result = new String(mArrayList.get(position).get(TAG_CONTENT));
+
+                Bundle bundle = new Bundle();
+                bundle.putString("title",title_result);
+                bundle.putString("author",author_result);
+                bundle.putString("content",content_result);
+
+
+
+                ListDetailFragment listDetailFragment = new ListDetailFragment();
+                listDetailFragment.setArguments(bundle);
+                android.support.v4.app.FragmentTransaction fragmenttransaction = getFragmentManager().beginTransaction();
+                fragmenttransaction.replace(R.id.fragment_container, listDetailFragment);
+                fragmenttransaction.commit();
+
+
+
+                //Log.d(TAG, "response  - " + "  title : " + title_result + ",  author : " + author_result + ",  content : " +content_result);
+
+                //Toast.makeText(getActivity(), str1, Toast.LENGTH_SHORT).show();
+
+            }
+        });
         return v;
     }
+
+
 
 
 
@@ -74,26 +107,23 @@ public class Fragment4 extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
             progressDialog = ProgressDialog.show(getContext(),
                     "Please Wait", null, true, true);
+
         }
 
 
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-
             progressDialog.dismiss();
             //mTextViewResult.setText(result);
             Log.d(TAG, "response  - " + result);
 
             if (result == null){
-
-                mTextViewResult.setText(errorString);
+               // mTextViewResult.setText(errorString);
             }
             else {
-
                 mJsonString = result;
                 showResult();
             }
@@ -170,7 +200,7 @@ public class Fragment4 extends Fragment {
                 String num = item.getString(TAG_NUM);
                 String title = item.getString(TAG_TITLE);
                 String author = item.getString(TAG_AUTHOR);
-                String date = item.getString(TAG_DATE);
+                String time = item.getString(TAG_TIME);
                 String content = item.getString(TAG_CONTENT);
 
                 HashMap<String,String> hashMap = new HashMap<>();
@@ -178,7 +208,7 @@ public class Fragment4 extends Fragment {
                 hashMap.put(TAG_NUM, num);
                 hashMap.put(TAG_TITLE, title);
                 hashMap.put(TAG_AUTHOR, author);
-                hashMap.put(TAG_DATE, date);
+                hashMap.put(TAG_TIME, time);
                 hashMap.put(TAG_CONTENT, content);
 
                 mArrayList.add(hashMap);
@@ -186,8 +216,8 @@ public class Fragment4 extends Fragment {
 
             ListAdapter adapter = new SimpleAdapter(
                     getActivity(), mArrayList, R.layout.item_list,
-                    new String[]{TAG_NUM,TAG_TITLE, TAG_AUTHOR, TAG_DATE, TAG_CONTENT},
-                    new int[]{R.id.textView_list_num, R.id.textView_list_title, R.id.textView_list_author, R.id.textView_list_date}
+                    new String[]{TAG_NUM,TAG_TITLE, TAG_AUTHOR, TAG_TIME, TAG_CONTENT},
+                    new int[]{R.id.textView_list_num, R.id.textView_list_title, R.id.textView_list_author, R.id.textView_list_time}
             );
 
             mlistView.setAdapter(adapter);
